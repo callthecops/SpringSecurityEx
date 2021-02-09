@@ -15,12 +15,6 @@ public class StudentManagementController {
             ,new Student(3,"Anna"));
 
     @GetMapping
-    //to use permission based authentication on a method level we have to use @PreAuthorize.This takes arguments
-    //like : hasRole('ROLE_) hasAnyRole('ROLE_) hasAuthority('permission') hasAnyAuthority('permission')
-    //if we use this annotation the antmatchers in ApplicationSecurityConfig are not needed anymore.We can choose either way
-    // of the 2 ways of configuration.Now we have to
-    //tell our configuration classes that we want to use these annotations for permission/role based authentication.
-    //So the way we do it is inside the configuration in ApplicationSecurityConfig we add @EnableGlobalMethodSecurity(prePostEnabled = true).
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ADMINTRAINEE')")
     public List<Student> getAllStudents() {
         System.out.println("getAllStudents");

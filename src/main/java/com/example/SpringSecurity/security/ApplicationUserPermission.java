@@ -1,5 +1,5 @@
 package com.example.SpringSecurity.security;
-//WE create permissions here with the help of the enum constructor.These are the same as Authority.
+
 public enum ApplicationUserPermission {
     STUDENT_READ("student:read"),
     STUDENT_WRITE("student:write"),
