@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 import static com.example.SpringSecurity.security.ApplicationUserRole.*;
 
@@ -36,7 +37,12 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 //Recommandation is to use csrf protection for any request that could be preocessed by a browser
                 // by normal users.If we are only creating a service that is used by non browser clients, we will
                 //likely want to disable csrf protection.
-                .csrf().disable()
+                //This is configuring how the tokens are generated.CSRF basically means that a token is generated
+                //and send back to the client , and once the client makes a request again it has to deliver that
+                //token in the header, if the 2 tokens mathc thant that means everything is ok, and access is granted.
+                //withHttpOnlyFalse means the cookies is unaccessable with client side javascript.
+                .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                .and()
                 .authorizeRequests()
                 .antMatchers("/", "index", "/css/*", "/js/*").permitAll()
                 .antMatchers("/api/**").hasRole(STUDENT.name())
