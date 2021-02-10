@@ -1,4 +1,4 @@
-package com.example.SpringSecurity.security;
+package com.example.demo.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -12,9 +12,16 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.authentication.rememberme.InMemoryTokenRepositoryImpl;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.util.matcher.AndRequestMatcher;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import static com.example.SpringSecurity.security.ApplicationUserRole.*;
+import javax.servlet.http.Cookie;
+import java.net.CookieStore;
+import java.util.concurrent.TimeUnit;
+
+import static com.example.demo.security.ApplicationUserRole.*;
 
 
 @Configuration
@@ -31,7 +38,6 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
         http
                 .csrf().disable()
                 .authorizeRequests()
@@ -40,30 +46,57 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest()
                 .authenticated()
                 .and()
-                .httpBasic();
+                .formLogin()
+                    .loginPage("/login")
+                    .permitAll()
+                    .defaultSuccessUrl("/courses", true)
+                    .passwordParameter("password")
+                    .usernameParameter("username")
+                .and()
+                .rememberMe()
+                    .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(21))
+                    .key("somethingverysecured")
+                    .rememberMeParameter("remember-me")
+                .and()
+                .logout()
+                    .logoutUrl("/logout")
+                    .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET")) // https://docs.spring.io/spring-security/site/docs/4.2.12.RELEASE/apidocs/org/springframework/security/config/annotation/web/configurers/LogoutConfigurer.html
+                    .clearAuthentication(true)
+                    .invalidateHttpSession(true)
+                    .deleteCookies("JSESSIONID", "remember-me")
+                    .logoutSuccessUrl("/login");
     }
-
 
     @Override
     @Bean
     protected UserDetailsService userDetailsService() {
         UserDetails annaSmithUser = User.builder()
                 .username("annasmith")
-                .password(passwordEncoder.encode("pass"))
+                .password(passwordEncoder.encode("password"))
                 .authorities(STUDENT.getGrantedAuthorities())
                 .build();
+
         UserDetails lindaUser = User.builder()
                 .username("linda")
-                .password(passwordEncoder.encode("pass"))
+                .password(passwordEncoder.encode("password123"))
                 .authorities(ADMIN.getGrantedAuthorities())
                 .build();
+
         UserDetails tomUser = User.builder()
                 .username("tom")
-                .password(passwordEncoder.encode("pass"))
+                .password(passwordEncoder.encode("password123"))
                 .authorities(ADMINTRAINEE.getGrantedAuthorities())
                 .build();
 
+        return new InMemoryUserDetailsManager(
+                annaSmithUser,
+                lindaUser,
+                tomUser
+        );
 
-        return new InMemoryUserDetailsManager(annaSmithUser, lindaUser,tomUser);
+    }
+
+    public static void main(String[] args) {
+        System.out.println(TimeUnit.DAYS.toSeconds(1));
     }
 }
