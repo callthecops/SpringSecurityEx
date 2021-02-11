@@ -52,6 +52,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 //We have to add this line and create a handler for the page in order to be redirected
                 //to this page upon successfully login.
                 .defaultSuccessUrl("/courses", true)
+                //the values here have to be the same as the input attributes names in the login form.
                 .passwordParameter("password")
                 .usernameParameter("username")
                 //If we want to enable the remember me function in spring security we have to add .and()
@@ -64,6 +65,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(21))
                 //This is the key that it is used to hash the contents(username + expiration date md5 hash value).
                 .key("somethingverysecured")
+                //tthis has to be the same as the remember me html attribute form the page checkbox.
                 .rememberMeParameter("remember-me")
                 .and()
                 .logout()
