@@ -1,11 +1,9 @@
 package com.example.demo.auth;
 
-
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
 //If we want to have a authentication with database functionality we have to create a class that implements

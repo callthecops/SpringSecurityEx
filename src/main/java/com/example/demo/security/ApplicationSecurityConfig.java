@@ -15,8 +15,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import java.util.concurrent.TimeUnit;
 
-import static com.example.demo.security.ApplicationUserRole.*;
-
+import static com.example.demo.security.ApplicationUserRole.STUDENT;
 
 @Configuration
 @EnableWebSecurity

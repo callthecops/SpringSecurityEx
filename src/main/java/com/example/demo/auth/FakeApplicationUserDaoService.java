@@ -33,8 +33,9 @@ public class FakeApplicationUserDaoService implements ApplicationUserDao {
     //Users - >daoAuthenticationProvider() in the class;
     @Override
     public Optional<ApplicationUser> selectApplicationUserByUsername(String username) {
-        return getApplicationUser().stream().filter(
-                applicationUser -> username.equals(applicationUser.getUsername()))
+        return getApplicationUser()
+                .stream()
+                .filter(applicationUser -> username.equals(applicationUser.getUsername()))
                 .findFirst();
     }
 

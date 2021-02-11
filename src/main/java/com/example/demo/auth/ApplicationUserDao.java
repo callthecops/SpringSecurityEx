@@ -6,6 +6,6 @@ import java.util.Optional;
 //interface.Then we have to use it as an field in our ApplicationUserService class.
 public interface ApplicationUserDao {
 
-    public Optional<ApplicationUser> selectApplicationUserByUsername(String username);
+    Optional<ApplicationUser> selectApplicationUserByUsername(String username);
 
 }
