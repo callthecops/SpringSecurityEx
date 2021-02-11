@@ -13,6 +13,7 @@ public class TemplateController {
         return "login";
     }
 
+    //This is the page we are redirected to once we have success login.
     @GetMapping("courses")
     public String getCourses() {
         return "courses";
