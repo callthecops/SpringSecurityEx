@@ -77,7 +77,8 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        //here we simply use the return value of the custom method that we have previously build.
+        //here we simply use the return value of the custom method that we have previously build.That
+        // is what we need to use to access the ApplicationUserService class that implements the UserDetailsService.
         auth.authenticationProvider(daoAuthenticationProvider());
     }
 
