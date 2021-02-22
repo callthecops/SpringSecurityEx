@@ -7,6 +7,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -31,16 +33,23 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
             UserNameAndPasswordAuthenticationRequest authenticationRequest = new ObjectMapper()
                     .readValue(request.getInputStream(), UserNameAndPasswordAuthenticationRequest.class);
             Authentication authentication = new UsernamePasswordAuthenticationToken(
-                    authenticationRequest.getUsername(),authenticationRequest.getPassword()
+                    authenticationRequest.getUsername(), authenticationRequest.getPassword()
             );
-            authenticationManager.authenticate(authentication);
+            //this checks if username exists and if it exist it will check if the password is correct or not.
+            //Ife everything is correct the request will be authenticated.
+            Authentication authenticate = authenticationManager.authenticate(authentication);
+            return authenticate;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-        return super.attemptAuthentication(request, response);
-
     }
 
 
+    //Jwt Filter and Succesfull authentication.Here we need to generate a token and send it to the client.
+    //This method is invoked after the attemptAuthentication and if it is succesffull.
+    @Override
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
+        //Inside this method we create a token.
+        super.successfulAuthentication(request, response, chain, authResult);
+    }
 }
